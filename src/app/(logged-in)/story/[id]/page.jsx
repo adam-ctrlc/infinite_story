@@ -18,25 +18,51 @@ export default async function Page({ params }) {
   return (
     <div className="min-h-screen pt-24 pb-12 px-4 max-w-4xl mx-auto">
       {/* Read Section */}
+      {/* Read Section */}
       <div className="mb-12">
-        <h1 className="text-3xl md:text-4xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-semibold uppercase tracking-wider">
+            Original Story
+          </span>
+          <span className="h-px flex-1 bg-gradient-to-r from-blue-900/50 to-transparent"></span>
+        </div>
+
+        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 text-white tracking-tight leading-tight">
           {story.title}
         </h1>
-        <div className="bg-gray-900/50 backdrop-blur-md border border-gray-800 rounded-2xl p-8 shadow-2xl">
-          <p className="text-base text-gray-300 leading-relaxed">
-            {story.snippet}
-          </p>
-          <div className="mt-8 flex items-center justify-between text-sm text-gray-500 border-t border-gray-800 pt-6">
-            <div className="flex items-center gap-2">
-              <span className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 block"></span>
-              <span>
-                Started by{" "}
-                <strong className="text-gray-300">@{story.author}</strong>
+
+        <div className="relative">
+          <div className="absolute -inset-1 bg-gradient-to-r from-blue-600/20 to-purple-600/20 rounded-3xl blur-xl opacity-50"></div>
+          <div className="relative bg-gray-900/80 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-8 md:p-10 shadow-2xl">
+            <p className="text-xl md:text-2xl text-gray-200 leading-relaxed font-serif">
+              {story.snippet}
+            </p>
+
+            <div className="mt-10 flex items-center justify-between text-sm text-gray-400 border-t border-gray-800 pt-8">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                  {story.author[0].toUpperCase()}
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-xs text-gray-500 uppercase tracking-wide">
+                    Started by
+                  </span>
+                  <strong className="text-gray-200 text-base">
+                    @{story.author}
+                  </strong>
+                </div>
+              </div>
+              <span className="font-medium bg-gray-800/50 px-3 py-1 rounded-full">
+                {story.timestamp}
               </span>
             </div>
-            <span>{story.timestamp}</span>
           </div>
         </div>
+      </div>
+
+      {/* Connector Line */}
+      <div className="flex flex-col items-center -mt-12 mb-0 relative z-0">
+        <div className="w-0.5 h-16 bg-gray-800"></div>
       </div>
 
       {/* Continuations Section */}
@@ -47,55 +73,49 @@ export default async function Page({ params }) {
       {/* Action Section */}
       <div className="flex flex-col gap-10">
         {/* Continue Story - Primary Action */}
-        <div className="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
-
-          <h2 className="text-xl font-bold text-gray-100 mb-6 flex items-center gap-3">
-            <span className="w-1 h-8 bg-blue-500 rounded-full"></span>
-            Continue the Narrative
+        {/* Continue Story - Primary Action */}
+        {/* Continue Story - Primary Action */}
+        <div className="bg-gray-900/20 border border-gray-800/60 rounded-xl p-6">
+          <h2 className="text-lg font-semibold text-gray-400 mb-4 flex items-center gap-2">
+            <PenTool size={16} />
+            Add to the story
           </h2>
 
-          <form className="flex flex-col gap-6">
-            <div className="relative">
-              <textarea
-                id="continuation"
-                name="continuation"
-                className="w-full h-64 bg-gray-950/80 border border-gray-800 text-gray-100 text-base rounded-xl p-6 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-gray-600 resize-none leading-relaxed shadow-inner"
-                placeholder="The story is in your hands. What happens next?"
-              ></textarea>
-              <div className="absolute bottom-4 right-4 text-xs text-gray-500">
-                Markdown supported
-              </div>
-            </div>
+          <form className="flex flex-col gap-4">
+            <textarea
+              id="continuation"
+              name="continuation"
+              className="w-full h-32 bg-gray-950 border border-gray-800 text-gray-300 text-base rounded-lg p-4 focus:outline-none focus:border-blue-500/50 transition-all placeholder-gray-600 resize-none"
+              placeholder="What happens next?"
+            ></textarea>
 
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-2 px-6 rounded-xl transition-all shadow-lg shadow-blue-900/20 transform hover:-translate-y-1 active:translate-y-0 text-base flex items-center gap-2"
+                className="bg-gray-800 hover:bg-gray-700 text-gray-200 font-medium py-2 px-6 rounded-lg transition-all text-sm"
               >
-                <span>Append to Story</span>
-                <PenTool size={20} />
+                Append
               </button>
             </div>
           </form>
         </div>
 
         {/* Start New Story - Secondary Action */}
-        <div className="flex items-center justify-between bg-gray-900/30 border border-gray-800/50 rounded-xl p-6">
-          <div>
-            <h3 className="text-lg font-bold text-gray-300">
-              Want to start something new?
-            </h3>
+        <div className="flex flex-col gap-2 justify-between bg-gray-900/30 border border-gray-800/50 rounded-xl p-6">
+          <h1 className="text-2xl font-bold text-gray-300">
+            Want to start something new?
+          </h1>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2">
             <p className="text-gray-500 text-sm">
               Begin a fresh journey and let others follow your lead.
             </p>
+            <Link
+              href="/story"
+              className="px-6 py-2 rounded-lg border border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white transition-all font-medium text-sm whitespace-nowrap"
+            >
+              Create New Story
+            </Link>
           </div>
-          <Link
-            href="/story"
-            className="px-6 py-2 rounded-lg border border-gray-700 text-gray-300 hover:border-gray-500 hover:text-white transition-all font-medium text-sm whitespace-nowrap"
-          >
-            Create New Story
-          </Link>
         </div>
       </div>
     </div>

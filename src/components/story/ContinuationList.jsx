@@ -7,10 +7,15 @@ export default function ContinuationList({ continuations }) {
 
   return (
     <div className="flex flex-col gap-6">
-      <h3 className="text-xl font-bold text-gray-200 flex items-center gap-2">
-        <GitBranch className="text-blue-500" />
-        Community Branches
+      <h3 className="text-xl font-bold text-gray-200 flex items-center justify-center gap-2 pb-4">
+        <div className="p-2 rounded-full bg-gray-900 border border-gray-800 z-10">
+          <GitBranch className="text-blue-500" size={20} />
+        </div>
+        <span className="sr-only">Narrative Paths</span>
       </h3>
+      <div className="text-center -mt-6 mb-6 text-gray-500 text-sm font-medium uppercase tracking-wider">
+        Narrative Paths
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {continuations.map((continuation) => (
           <div
