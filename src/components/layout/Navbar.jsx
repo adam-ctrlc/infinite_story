@@ -2,26 +2,27 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
-  Home,
   User,
   BookOpen,
   Settings,
   Library,
   PenTool,
+  LogOut,
   Menu,
   X,
 } from "lucide-react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
 
   const navItems = [
-    { name: "Home", href: "/feed", icon: Home },
     { name: "Feed", href: "/feed", icon: BookOpen },
-    { name: "My Stories", href: "/my-stories", icon: Library },
+    { name: "Write", href: "/story", icon: Library },
     { name: "Profile", href: "/profile", icon: User },
-    { name: "Settings", href: "/settings", icon: Settings },
+    // Settings removed, will be inside profile
   ];
 
   return (
@@ -43,19 +44,37 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:block">
             <div className="flex items-baseline space-x-4">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-300 hover:text-white hover:bg-gray-800 px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 group"
-                >
-                  <item.icon
-                    size={16}
-                    className="text-gray-500 group-hover:text-blue-400 transition-colors"
-                  />
-                  {item.name}
-                </Link>
-              ))}
+              {navItems.map((item) => {
+                const isActive = pathname === item.href;
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 group ${
+                      isActive
+                        ? "bg-gray-800 text-white"
+                        : "text-gray-300 hover:text-white hover:bg-gray-800"
+                    }`}
+                  >
+                    <item.icon
+                      size={16}
+                      className={`transition-colors ${
+                        isActive
+                          ? "text-blue-400"
+                          : "text-gray-500 group-hover:text-blue-400"
+                      }`}
+                    />
+                    {item.name}
+                  </Link>
+                );
+              })}
+              <button className="px-3 py-2 rounded-md text-sm font-medium transition-all flex items-center gap-2 group text-gray-300 hover:text-red-400 hover:bg-gray-800">
+                <LogOut
+                  size={16}
+                  className="transition-colors text-gray-500 group-hover:text-red-400"
+                />
+                Logout
+              </button>
             </div>
           </div>
 
@@ -76,17 +95,37 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden bg-gray-950 border-b border-gray-800">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {navItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className="text-gray-300 hover:text-white hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium flex items-center gap-2"
-              >
-                <item.icon size={18} className="text-gray-400" />
-                {item.name}
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setIsOpen(false)}
+                  className={`block px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 ${
+                    isActive
+                      ? "bg-gray-800 text-white"
+                      : "text-gray-300 hover:text-white hover:bg-gray-800"
+                  }`}
+                >
+                  <item.icon
+                    size={18}
+                    className={isActive ? "text-blue-400" : "text-gray-400"}
+                  />
+                  {item.name}
+                </Link>
+              );
+            })}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="w-full text-left block px-3 py-2 rounded-md text-base font-medium flex items-center gap-2 text-gray-300 hover:text-red-400 hover:bg-gray-800"
+            >
+              <LogOut
+                size={18}
+                className="text-gray-400 group-hover:text-red-400"
+              />
+              Logout
+            </button>
           </div>
         </div>
       )}

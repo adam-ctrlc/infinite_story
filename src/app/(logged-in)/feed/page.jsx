@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { X } from "lucide-react";
 import FeedList from "@/components/feed/FeedList";
 import Sidebar from "@/components/feed/Sidebar";
 import FeedFilters from "@/components/feed/FeedFilters";
@@ -95,13 +96,13 @@ export default function FeedPage() {
                   onClick={() => setCategoryFilter(null)}
                   className="hover:text-white"
                 >
-                  &times;
+                  <X size={12} />
                 </button>
               </span>
             </div>
           )}
 
-          <FeedList stories={paginatedStories} />
+          <FeedList stories={paginatedStories} onClearFilters={resetFilters} />
 
           {filteredStories.length > 0 && (
             <Pagination
@@ -109,17 +110,6 @@ export default function FeedPage() {
               totalPages={totalPages}
               setCurrentPage={setCurrentPage}
             />
-          )}
-
-          {filteredStories.length === 0 && (
-            <div className="flex justify-center mt-4">
-              <button
-                onClick={resetFilters}
-                className="text-blue-500 hover:text-blue-400 text-sm"
-              >
-                Clear all filters
-              </button>
-            </div>
           )}
         </div>
 

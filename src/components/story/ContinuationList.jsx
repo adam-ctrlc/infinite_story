@@ -20,12 +20,12 @@ export default function ContinuationList({ continuations }) {
         {continuations.map((continuation) => (
           <div
             key={continuation.id}
-            className="bg-gray-900/40 border border-gray-800 rounded-xl p-5 hover:border-gray-700 transition-all cursor-pointer group"
+            className="bg-gray-900/40 border border-gray-800 rounded-xl p-6 hover:border-gray-700 transition-all cursor-pointer group h-46 flex flex-col justify-between"
           >
-            <p className="text-gray-300 text-sm leading-relaxed mb-4 line-clamp-3">
+            <p className="text-gray-300 text-sm leading-relaxed line-clamp-6">
               {continuation.content}
             </p>
-            <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-800/50 pt-3">
+            <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-800/50 pt-4 mt-4">
               <span className="text-blue-400 font-medium">
                 @{continuation.author}
               </span>
