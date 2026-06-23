@@ -29,7 +29,7 @@ function VisibilityToggle({ storyId, initialVisibility }) {
     <button
       onClick={toggle}
       disabled={loading}
-      title={isPrivate ? 'Private — click to make public' : 'Public — click to make private'}
+      title={isPrivate ? 'Private - click to make public' : 'Public - click to make private'}
       className={`flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border transition-colors shrink-0 ${
         isPrivate
           ? 'border-[#f2a600] text-[#f2a600] bg-[#fff9ec] hover:bg-[#fff3d6]'

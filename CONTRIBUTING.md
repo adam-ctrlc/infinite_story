@@ -19,10 +19,10 @@ Thank you for your interest. This guide covers setup, conventions, and the PR pr
 
 ## Ways to Contribute
 
-- **Bug fixes** — open an issue first, then submit a PR.
-- **Features** — check open `enhancement` issues and comment to claim before starting.
-- **Documentation** — improvements to this guide, the README, or inline comments are welcome.
-- **Performance** — query optimisation, bundle size, and rendering fixes are valued.
+- **Bug fixes** - open an issue first, then submit a PR.
+- **Features** - check open `enhancement` issues and comment to claim before starting.
+- **Documentation** - improvements to this guide, the README, or inline comments are welcome.
+- **Performance** - query optimisation, bundle size, and rendering fixes are valued.
 
 ---
 
@@ -44,7 +44,7 @@ pnpm drizzle-kit push
 pnpm dev
 ```
 
-Required credentials — see the README's Environment Variables section for full details:
+Required credentials - see the README's Environment Variables section for full details:
 
 ```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_...
@@ -74,7 +74,7 @@ import Avatar from './Avatar'
 
 ### Components
 
-Follow Atomic Design — place components in the right layer:
+Follow Atomic Design - place components in the right layer:
 
 | Layer | Location | Rule |
 |---|---|---|
@@ -93,7 +93,7 @@ Default to server components. Only add `'use client'` when you need event handle
 
 ### Icons
 
-Lucide React only — no other icon libraries, no raw SVGs, no unicode glyphs.
+Lucide React only - no other icon libraries, no raw SVGs, no unicode glyphs.
 
 ### Data Access
 
@@ -101,7 +101,7 @@ All database access goes through `src/lib/store.js`. Never import `db.js` or `sc
 
 - Every store function must be `async` and exported.
 - Use `Promise.all` for independent concurrent fetches.
-- No business logic in store functions — formatting and enrichment happen in routes or components.
+- No business logic in store functions - formatting and enrichment happen in routes or components.
 
 ### API Routes
 
@@ -112,7 +112,7 @@ All database access goes through `src/lib/store.js`. Never import `db.js` or `sc
 
 ### Comments
 
-Write no comments by default. Add one only when the **why** is non-obvious — a hidden constraint, a subtle invariant, or a workaround for a specific bug.
+Write no comments by default. Add one only when the **why** is non-obvious - a hidden constraint, a subtle invariant, or a workaround for a specific bug.
 
 ---
 
@@ -144,7 +144,7 @@ pnpm drizzle-kit push
 
 Rules:
 - Always provide a default for new columns on existing tables.
-- Never remove columns in a PR — deprecate first, remove later.
+- Never remove columns in a PR - deprecate first, remove later.
 - Update `rowToNode` or `rowToComment` if the new column should be exposed through the store.
 - Document every schema change in your PR description.
 
@@ -160,7 +160,7 @@ Rules:
 1. Pick the correct Atomic Design layer.
 2. Create `src/components/<layer>/ComponentName.jsx`.
 3. Import using `@/` paths everywhere it's used.
-4. No barrel `index.js` files — import files directly.
+4. No barrel `index.js` files - import files directly.
 
 ---
 
@@ -179,9 +179,9 @@ Rules:
    - Privacy settings (hide followers / following)
    - Visit another user's public profile
 
-3. **Test at 375px width** — no overflow, no broken layouts.
+3. **Test at 375px width** - no overflow, no broken layouts.
 
-4. **Accessibility basics** — form inputs have `id`, `name`, `autoComplete`, and `<label htmlFor>`. Icon-only buttons have a `title`.
+4. **Accessibility basics** - form inputs have `id`, `name`, `autoComplete`, and `<label htmlFor>`. Icon-only buttons have a `title`.
 
 ---
 
@@ -191,15 +191,15 @@ PR title format: `type: short description`
 
 The description must include:
 
-- **What changed** — bullet list of files and why.
-- **How to test** — step-by-step instructions with URLs and expected outcomes.
-- **Schema changes** — tables/columns added or modified, with types and defaults.
-- **Screenshots** — before/after if the UI changed.
+- **What changed** - bullet list of files and why.
+- **How to test** - step-by-step instructions with URLs and expected outcomes.
+- **Schema changes** - tables/columns added or modified, with types and defaults.
+- **Screenshots** - before/after if the UI changed.
 
 **Review checklist** (address before requesting review):
 
 - [ ] `pnpm build` passes with zero errors
-- [ ] All imports use `@/` — no relative paths
+- [ ] All imports use `@/` - no relative paths
 - [ ] Icons from `lucide-react` only
 - [ ] No colours outside the design token palette
 - [ ] No `console.log` left in
@@ -227,14 +227,14 @@ Label it `bug`.
 
 Do not change these without opening a discussion issue first.
 
-- **No TypeScript** — plain JavaScript throughout.
-- **Drizzle only** — no Prisma, Sequelize, or raw SQL outside `sql` template tags.
-- **No test framework** — don't add Jest/Vitest/Playwright without maintainer approval.
-- **No global state library** — use React `useState`/`useEffect`. No Redux or Zustand.
-- **Lucide React only** — no other icon packages.
-- **No CSS-in-JS** — Tailwind utilities and `globals.css` only.
-- **`store.js` is the only data layer** — pages and routes never import `db.js` or `schema.js` directly.
-- **Branches are always public** — enforced in `addNode()`. Do not add UI to change branch visibility.
+- **No TypeScript** - plain JavaScript throughout.
+- **Drizzle only** - no Prisma, Sequelize, or raw SQL outside `sql` template tags.
+- **No test framework** - don't add Jest/Vitest/Playwright without maintainer approval.
+- **No global state library** - use React `useState`/`useEffect`. No Redux or Zustand.
+- **Lucide React only** - no other icon packages.
+- **No CSS-in-JS** - Tailwind utilities and `globals.css` only.
+- **`store.js` is the only data layer** - pages and routes never import `db.js` or `schema.js` directly.
+- **Branches are always public** - enforced in `addNode()`. Do not add UI to change branch visibility.
 
 ---
 

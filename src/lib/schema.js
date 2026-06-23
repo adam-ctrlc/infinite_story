@@ -11,7 +11,7 @@ export const nodes = sqliteTable('nodes', {
   authorImageUrl: text('author_image_url'),
   likes: integer('likes').default(0).notNull(),
   createdAt: text('created_at').notNull(),
-  // 'public' | 'private' — branches always treated as public regardless of value
+  // 'public' | 'private' - branches always treated as public regardless of value
   visibility: text('visibility').default('public').notNull(),
 })
 

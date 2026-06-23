@@ -5,7 +5,7 @@ const TABS = ['Following', 'Newest', 'Trending', 'Top Rated', 'Most Discussed', 
 export default function FeedFilters({ activeFilter, setActiveFilter, searchQuery, setSearchQuery }) {
   return (
     <div className="mb-6">
-      {/* Search — top */}
+      {/* Search - top */}
       <div className="relative mb-4">
         <label htmlFor="feed-search" className="sr-only">Search stories</label>
         <input
@@ -21,7 +21,7 @@ export default function FeedFilters({ activeFilter, setActiveFilter, searchQuery
         <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#b3b3b3]" />
       </div>
 
-      {/* Tabs — below search */}
+      {/* Tabs - below search */}
       <div className="flex items-center gap-6 overflow-x-auto border-b border-[#e6e6e6] scrollbar-none">
         {TABS.map((tab) => (
           <button

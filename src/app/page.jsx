@@ -3,7 +3,7 @@ import { SignIn } from '@clerk/nextjs'
 export default function Page() {
   return (
     <main className="min-h-screen bg-white flex">
-      {/* Left panel — branding */}
+      {/* Left panel - branding */}
       <div className="hidden lg:flex flex-col justify-between w-1/2 bg-[#fafafa] border-r border-[#e6e6e6] p-16">
         <div>
           <span
@@ -28,7 +28,7 @@ export default function Page() {
         <p className="text-sm text-[#6b6b6b]">© 2025 Infinite Story</p>
       </div>
 
-      {/* Right panel — sign in */}
+      {/* Right panel - sign in */}
       <div className="flex flex-col items-center justify-center flex-1 p-8">
         <div className="w-full max-w-sm">
           <div className="mb-8 lg:hidden">
