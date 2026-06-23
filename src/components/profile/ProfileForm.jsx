@@ -1,162 +1,138 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { Save, Edit2, X } from "lucide-react";
+import { useState } from 'react'
+import { useUser } from '@clerk/nextjs'
+import { Save, Edit2, X } from 'lucide-react'
 
 export default function ProfileForm() {
-  const [isEditing, setIsEditing] = useState(false);
-  const [profileData, setProfileData] = useState({
-    displayName: "John Doe",
-    username: "johndoe",
-    bio: "Sci-fi enthusiast. Digital nomad. Exploring the infinite branches of storytelling.",
-    email: "john@example.com",
-  });
+  const { user } = useUser()
+  const [isEditing, setIsEditing] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
 
-  const handleSave = (e) => {
-    e.preventDefault();
-    setIsEditing(false);
-    // Logic to save data would go here
-  };
+  function handleEdit() {
+    setFirstName(user?.firstName || '')
+    setLastName(user?.lastName || '')
+    setIsEditing(true)
+  }
 
-  const toggleEdit = () => {
-    if (isEditing) {
-      // Reset form would happen here
-      setIsEditing(false);
-    } else {
-      setIsEditing(true);
-    }
-  };
+  async function handleSave(e) {
+    e.preventDefault()
+    try {
+      await user?.update({ firstName: firstName.trim(), lastName: lastName.trim() })
+    } catch (_) {}
+    setIsEditing(false)
+  }
+
+  const displayFirst = isEditing ? firstName : (user?.firstName || '')
+  const displayLast = isEditing ? lastName : (user?.lastName || '')
+  const username = user?.username || ''
+  const email = user?.primaryEmailAddress?.emailAddress || ''
+
+  const fieldClass = (editing) =>
+    `w-full border rounded px-3 py-2 text-sm text-[#242424] bg-white outline-none transition-colors ${
+      editing
+        ? 'border-[#242424] focus:border-[#1a8917]'
+        : 'border-[#e6e6e6] bg-[#fafafa] cursor-default text-[#6b6b6b]'
+    }`
 
   return (
     <>
-      <div className="flex items-center justify-between mb-8 relative z-10">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          Edit Details
-        </h2>
-        <button
-          onClick={toggleEdit}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-            isEditing
-              ? "bg-red-500/10 text-red-400 hover:bg-red-500/20"
-              : "bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white"
-          }`}
-        >
-          {isEditing ? (
-            <>
-              <X size={14} /> Cancel
-            </>
-          ) : (
-            <>
-              <Edit2 size={14} /> Edit
-            </>
-          )}
-        </button>
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-lg font-bold text-[#242424]">Profile Details</h2>
+        {isEditing ? (
+          <button
+            type="button"
+            onClick={() => setIsEditing(false)}
+            className="flex items-center gap-1.5 text-sm text-[#6b6b6b] hover:text-[#242424] transition-colors"
+          >
+            <X size={14} /> Cancel
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleEdit}
+            className="flex items-center gap-1.5 text-sm text-[#6b6b6b] hover:text-[#242424] transition-colors border border-[#e6e6e6] px-3 py-1.5 rounded hover:border-[#242424]"
+          >
+            <Edit2 size={13} /> Edit
+          </button>
+        )}
       </div>
 
-      <form onSubmit={handleSave} className="space-y-4 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="flex flex-col gap-3">
-            <label
-              htmlFor="display_name"
-              className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1"
-            >
-              Display Name
-            </label>
+      <form onSubmit={handleSave} className="space-y-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="profile-first-name" className="text-xs font-medium text-[#6b6b6b] uppercase tracking-wide">First Name</label>
             <input
+              id="profile-first-name"
+              name="firstName"
               type="text"
-              id="display_name"
+              autoComplete="given-name"
+              value={displayFirst}
+              onChange={(e) => setFirstName(e.target.value)}
               disabled={!isEditing}
-              defaultValue={profileData.displayName}
-              className={`w-full bg-gray-950/50 border text-white text-sm font-medium rounded-xl p-4 transition-all ${
-                isEditing
-                  ? "border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 placeholder-gray-700"
-                  : "border-transparent cursor-not-allowed opacity-70"
-              }`}
+              placeholder="First name"
+              className={fieldClass(isEditing)}
             />
           </div>
-          <div className="flex flex-col gap-3">
-            <label
-              htmlFor="username"
-              className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1"
-            >
-              Username
-            </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-medium">
-                @
-              </span>
-              <input
-                type="text"
-                id="username"
-                disabled={!isEditing}
-                defaultValue={profileData.username}
-                className={`w-full bg-gray-950/50 border text-white text-sm font-medium rounded-xl p-4 pl-8 transition-all ${
-                  isEditing
-                    ? "border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 placeholder-gray-700"
-                    : "border-transparent cursor-not-allowed opacity-70"
-                }`}
-              />
-            </div>
+          <div className="flex flex-col gap-1.5">
+            <label htmlFor="profile-last-name" className="text-xs font-medium text-[#6b6b6b] uppercase tracking-wide">Last Name</label>
+            <input
+              id="profile-last-name"
+              name="lastName"
+              type="text"
+              autoComplete="family-name"
+              value={displayLast}
+              onChange={(e) => setLastName(e.target.value)}
+              disabled={!isEditing}
+              placeholder="Last name"
+              className={fieldClass(isEditing)}
+            />
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <label
-            htmlFor="bio"
-            className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1"
-          >
-            Bio
-          </label>
-          <textarea
-            id="bio"
-            rows="4"
-            disabled={!isEditing}
-            className={`w-full bg-gray-950/50 border text-white text-sm font-medium rounded-xl p-4 transition-all resize-none leading-relaxed ${
-              isEditing
-                ? "border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 placeholder-gray-700"
-                : "border-transparent cursor-not-allowed opacity-70"
-            }`}
-            defaultValue={profileData.bio}
-          />
-          {isEditing && (
-            <p className="text-xs text-gray-600 text-right pr-2 animate-in fade-in">
-              Max 160 characters
-            </p>
-          )}
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="profile-username" className="text-xs font-medium text-[#6b6b6b] uppercase tracking-wide">Username</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#6b6b6b] text-sm">@</span>
+            <input
+              id="profile-username"
+              name="username"
+              type="text"
+              autoComplete="username"
+              value={username}
+              disabled
+              className="w-full border border-[#e6e6e6] bg-[#fafafa] rounded px-3 py-2 pl-7 text-sm text-[#6b6b6b] cursor-default"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <label
-            htmlFor="email"
-            className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1"
-          >
-            Email Address
-          </label>
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="profile-email" className="text-xs font-medium text-[#6b6b6b] uppercase tracking-wide">Email</label>
           <input
+            id="profile-email"
+            name="email"
             type="email"
-            id="email"
-            disabled={!isEditing}
-            defaultValue={profileData.email}
-            className={`w-full bg-gray-950/50 border text-white text-sm font-medium rounded-xl p-4 transition-all ${
-              isEditing
-                ? "border-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 placeholder-gray-700"
-                : "border-transparent cursor-not-allowed opacity-70"
-            }`}
+            autoComplete="email"
+            value={email}
+            disabled
+            className="w-full border border-[#e6e6e6] bg-[#fafafa] rounded px-3 py-2 text-sm text-[#6b6b6b] cursor-default"
           />
+          <p className="text-xs text-[#b3b3b3]">Managed through your Clerk account.</p>
         </div>
 
         {isEditing && (
-          <div className="pt-6 flex justify-end border-t border-gray-800/50 mt-8 animate-in slide-in-from-bottom-2">
+          <div className="pt-4 border-t border-[#e6e6e6] flex justify-end">
             <button
               type="submit"
-              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-lg shadow-blue-900/20 active:scale-95 text-sm transform hover:-translate-y-0.5"
+              className="flex items-center gap-2 px-5 py-2 bg-[#1a8917] text-white text-sm font-medium rounded-full hover:bg-[#157013] transition-colors"
             >
-              <Save size={18} />
+              <Save size={14} />
               Save Changes
             </button>
           </div>
         )}
       </form>
     </>
-  );
+  )
 }

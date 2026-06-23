@@ -1,20 +1,125 @@
 @import "tailwindcss";
 
 @theme {
-  --color-gray-950: #030712;
-  --color-gray-900: #111827;
-  --color-gray-800: #1f2937;
-  --color-blue-500: #3b82f6;
-  --color-blue-600: #2563eb;
+  /* Medium-inspired light theme */
+  --color-background: #fafafa;
+  --color-foreground: #242424;
+  --color-card: #ffffff;
+  --color-card-foreground: #242424;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #242424;
+  --color-primary: #1a8917;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f2f2f2;
+  --color-secondary-foreground: #242424;
+  --color-muted: #f7f7f7;
+  --color-muted-foreground: #6b6b6b;
+  --color-accent: #f2f2f2;
+  --color-accent-foreground: #242424;
+  --color-destructive: #c94c4c;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e6e6e6;
+  --color-input: #f2f2f2;
+  --color-ring: #242424;
+  --radius: 0.25rem;
+
+  /* Serif font token used on story content */
+  --font-serif: var(--font-lora), 'Charter', 'Georgia', 'Cambria', serif;
 }
 
 body {
-  background-color: var(--color-gray-950);
-  color: #f3f4f6;
-  background-image: radial-gradient(
-    circle at 50% 0%,
-    rgba(59, 130, 246, 0.15),
-    transparent 40%
-  );
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
+
+/* ── Tiptap / story rich content ── */
+.tiptap-editor .ProseMirror {
+  outline: none;
+  font-family: var(--font-lora), Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.9;
+  color: #242424;
+  min-height: 320px;
+}
+
+.tiptap-editor .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #b3b3b3;
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+.tiptap-editor .ProseMirror h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1.5em 0 0.5em;
+}
+
+.tiptap-editor .ProseMirror h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin: 1.25em 0 0.4em;
+}
+
+.tiptap-editor .ProseMirror blockquote {
+  border-left: 3px solid #242424;
+  padding-left: 1.25rem;
+  margin: 1.5em 0;
+  color: #6b6b6b;
+  font-style: italic;
+}
+
+.tiptap-editor .ProseMirror ul,
+.tiptap-editor .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin: 1em 0;
+}
+
+.tiptap-editor .ProseMirror li { margin: 0.25em 0; }
+
+.tiptap-editor .ProseMirror ul li { list-style-type: disc; }
+.tiptap-editor .ProseMirror ol li { list-style-type: decimal; }
+
+.tiptap-editor .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 2px;
+  margin: 1.5em 0;
+  display: block;
+}
+
+.tiptap-editor .ProseMirror a {
+  color: #1a8917;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.tiptap-editor .ProseMirror hr {
+  border: none;
+  border-top: 1px solid #e6e6e6;
+  margin: 2em 0;
+}
+
+/* Story content rendering (read view) */
+.story-content {
+  font-family: var(--font-lora), Georgia, serif;
+  font-size: 1.2rem;
+  line-height: 1.9;
+  color: #242424;
+}
+.story-content h2 { font-size: 1.75rem; font-weight: 700; line-height: 1.3; margin: 1.5em 0 0.5em; }
+.story-content h3 { font-size: 1.35rem; font-weight: 700; line-height: 1.4; margin: 1.25em 0 0.4em; }
+.story-content blockquote { border-left: 3px solid #242424; padding-left: 1.25rem; margin: 1.5em 0; color: #6b6b6b; font-style: italic; }
+.story-content ul { padding-left: 1.5rem; margin: 1em 0; list-style-type: disc; }
+.story-content ol { padding-left: 1.5rem; margin: 1em 0; list-style-type: decimal; }
+.story-content li { margin: 0.25em 0; }
+.story-content img { max-width: 100%; height: auto; border-radius: 2px; margin: 1.5em 0; display: block; }
+.story-content a { color: #1a8917; text-decoration: underline; text-underline-offset: 2px; }
+.story-content hr { border: none; border-top: 1px solid #e6e6e6; margin: 2em 0; }
+.story-content p { margin: 0 0 1em; }

@@ -42,11 +42,14 @@ export default function SecuritySettings() {
 
         <form className="space-y-4">
           <div className="flex flex-col gap-3">
-            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+            <label htmlFor="current-password" className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
               Current Password
             </label>
             <input
+              id="current-password"
+              name="currentPassword"
               type="password"
+              autoComplete="current-password"
               placeholder="••••••••"
               disabled={!isEditing}
               className={`w-full bg-gray-950/50 border text-white text-sm font-medium rounded-xl p-4 transition-all ${
@@ -58,11 +61,14 @@ export default function SecuritySettings() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-3">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+              <label htmlFor="new-password" className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
                 New Password
               </label>
               <input
+                id="new-password"
+                name="newPassword"
                 type="password"
+                autoComplete="new-password"
                 placeholder="••••••••"
                 disabled={!isEditing}
                 className={`w-full bg-gray-950/50 border text-white text-sm font-medium rounded-xl p-4 transition-all ${
@@ -73,11 +79,14 @@ export default function SecuritySettings() {
               />
             </div>
             <div className="flex flex-col gap-3">
-              <label className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
+              <label htmlFor="confirm-password" className="text-xs font-bold text-gray-500 uppercase tracking-wider ml-1">
                 Confirm Password
               </label>
               <input
+                id="confirm-password"
+                name="confirmPassword"
                 type="password"
+                autoComplete="new-password"
                 placeholder="••••••••"
                 disabled={!isEditing}
                 className={`w-full bg-gray-950/50 border text-white text-sm font-medium rounded-xl p-4 transition-all ${

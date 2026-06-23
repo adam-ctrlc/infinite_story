@@ -1,123 +1,134 @@
-"use client";
+'use client'
 
-import { useState, useMemo } from "react";
-import { X } from "lucide-react";
-import FeedList from "@/components/feed/FeedList";
-import Sidebar from "@/components/feed/Sidebar";
-import FeedFilters from "@/components/feed/FeedFilters";
-import Pagination from "@/components/feed/Pagination";
-import { stories } from "@/data/stories";
+import { useState, useMemo, useEffect } from 'react'
+import { X, Users } from 'lucide-react'
+import FeedList from '@/components/organisms/FeedList'
+import FeedSidebar from '@/components/organisms/FeedSidebar'
+import FeedFilters from '@/components/organisms/FeedFilters'
+import Pagination from '@/components/organisms/Pagination'
+
+const ITEMS_PER_PAGE = 8
 
 export default function FeedPage() {
-  const [activeFilter, setActiveFilter] = useState("Newest");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const [stories, setStories] = useState([])
+  const [followingStories, setFollowingStories] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [activeFilter, setActiveFilter] = useState('Newest') // default; Following shows after user follows someone
+  const [searchQuery, setSearchQuery] = useState('')
+  const [categoryFilter, setCategoryFilter] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
 
-  // Filter and Sort Logic
-  const filteredStories = useMemo(() => {
-    let result = [...stories];
+  useEffect(() => {
+    fetch('/api/stories')
+      .then((r) => r.json())
+      .then((data) => { setStories(data); setLoading(false) })
+  }, [])
 
-    // 1. Search Query
+  // Fetch following stories when that tab is selected
+  useEffect(() => {
+    if (activeFilter === 'Following') {
+      fetch('/api/stories?following=true')
+        .then((r) => r.json())
+        .then(setFollowingStories)
+    }
+  }, [activeFilter])
+
+  const filtered = useMemo(() => {
+    if (activeFilter === 'Following') return followingStories
+
+    let result = [...stories]
     if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.toLowerCase()
       result = result.filter(
-        (story) =>
-          story.title.toLowerCase().includes(q) ||
-          story.snippet.toLowerCase().includes(q) ||
-          story.author.toLowerCase().includes(q)
-      );
+        (s) =>
+          s.title?.toLowerCase().includes(q) ||
+          s.content?.toLowerCase().includes(q) ||
+          (typeof s.author === 'string' ? s.author : s.author?.name)?.toLowerCase().includes(q)
+      )
     }
+    if (categoryFilter) result = result.filter((s) => s.category === categoryFilter)
+    if (activeFilter === 'Trending') result.sort((a, b) => b.likes - a.likes)
+    else if (activeFilter === 'Most Discussed') result.sort((a, b) => (b.commentCount ?? 0) - (a.commentCount ?? 0))
+    else if (activeFilter === 'Most Branched') result.sort((a, b) => (b.branchCount ?? 0) - (a.branchCount ?? 0))
+    else if (activeFilter === 'Top Rated') result.sort((a, b) => (b.ratingAverage ?? 0) - (a.ratingAverage ?? 0))
+    return result
+  }, [stories, followingStories, searchQuery, categoryFilter, activeFilter])
 
-    // 2. Category Filter
-    if (categoryFilter) {
-      result = result.filter(
-        (story) => story.category && story.category === categoryFilter
-      );
-    }
-
-    // 3. Sort/Tabs
-    if (activeFilter === "Newest") {
-      // Mock date sorting (assuming higher ID is newer for now, or using timestamp string simpler logic)
-      // Real app would parse date strings. For now, let's reverse generic 'stories' array order if "Newest"
-      // or keep "Relevance" as is if search is active.
-      // Let's implement simple mock sort:
-      // Newest: Preserve default order (assuming mock data is somewhat ordered)
-      // Trending: Sort by likes
-    } else if (activeFilter === "Trending") {
-      result.sort((a, b) => b.likes - a.likes);
-    }
-
-    return result;
-  }, [searchQuery, categoryFilter, activeFilter]);
-
-  // Pagination Logic
-  const totalPages = Math.ceil(filteredStories.length / itemsPerPage);
-  const paginatedStories = filteredStories.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE)
+  const paginated = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE)
+  const trendingStories = [...stories].sort((a, b) => b.likes - a.likes).slice(0, 5)
 
   const resetFilters = () => {
-    setSearchQuery("");
-    setCategoryFilter(null);
-    setActiveFilter("Newest");
-    setCurrentPage(1);
-  };
+    setSearchQuery('')
+    setCategoryFilter(null)
+    setActiveFilter('Newest')
+    setCurrentPage(1)
+  }
+
+  const isFollowingTab = activeFilter === 'Following'
 
   return (
-    <div className="min-h-screen px-4 pt-24 pb-12 max-w-7xl mx-auto">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-        {/* Main Feed Column */}
-        <div className="lg:col-span-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 mb-2">
-              Latest Stories
-            </h1>
-            <p className="text-gray-400">
-              Discover worlds created by the community
-            </p>
+    <div className="min-h-screen bg-white pt-14 pb-16">
+      <div className="max-w-5xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 pt-10">
+
+          {/* Main feed column */}
+          <div className="lg:col-span-8">
+            <FeedFilters
+              activeFilter={activeFilter}
+              setActiveFilter={(f) => { setActiveFilter(f); setCurrentPage(1) }}
+              searchQuery={searchQuery}
+              setSearchQuery={(q) => { setSearchQuery(q); setCurrentPage(1) }}
+            />
+
+            {!isFollowingTab && categoryFilter && (
+              <div className="mb-4 flex items-center gap-2">
+                <span className="text-sm text-[#6b6b6b]">Genre:</span>
+                <span className="px-3 py-1 rounded-full bg-[#f2f2f2] text-[#242424] text-xs font-medium flex items-center gap-2">
+                  {categoryFilter}
+                  <button onClick={() => setCategoryFilter(null)} className="hover:text-[#c94c4c]">
+                    <X size={11} />
+                  </button>
+                </span>
+              </div>
+            )}
+
+            {loading ? (
+              <div className="space-y-8 mt-4">
+                {[...Array(5)].map((_, i) => (
+                  <div key={i} className="py-8 border-b border-[#e6e6e6]">
+                    <div className="h-4 bg-[#f2f2f2] rounded w-32 mb-4 animate-pulse" />
+                    <div className="h-6 bg-[#f2f2f2] rounded w-3/4 mb-2 animate-pulse" />
+                    <div className="h-4 bg-[#f2f2f2] rounded w-full mb-1 animate-pulse" />
+                    <div className="h-4 bg-[#f2f2f2] rounded w-5/6 animate-pulse" />
+                  </div>
+                ))}
+              </div>
+            ) : isFollowingTab && filtered.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <Users size={36} className="text-[#e6e6e6] mb-4" />
+                <p className="text-[#242424] font-medium mb-2">No stories yet</p>
+                <p className="text-sm text-[#6b6b6b] max-w-xs">
+                  Follow authors on their story pages to see their latest work here.
+                </p>
+              </div>
+            ) : (
+              <FeedList stories={paginated} onClearFilters={resetFilters} />
+            )}
+
+            <Pagination currentPage={currentPage} totalPages={totalPages} setCurrentPage={setCurrentPage} />
           </div>
 
-          <FeedFilters
-            activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-          />
-
-          {categoryFilter && (
-            <div className="mb-6 flex items-center gap-2">
-              <span className="text-sm text-gray-500">Filtering by:</span>
-              <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-bold flex items-center gap-2">
-                {categoryFilter}
-                <button
-                  onClick={() => setCategoryFilter(null)}
-                  className="hover:text-white"
-                >
-                  <X size={12} />
-                </button>
-              </span>
-            </div>
-          )}
-
-          <FeedList stories={paginatedStories} onClearFilters={resetFilters} />
-
-          {filteredStories.length > 0 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              setCurrentPage={setCurrentPage}
+          {/* Sidebar */}
+          <div className="lg:col-span-4 hidden lg:block border-l border-[#e6e6e6] pl-10">
+            <FeedSidebar
+              activeCategory={categoryFilter}
+              onCategorySelect={(cat) => { setCategoryFilter(cat); setCurrentPage(1) }}
+              trendingStories={trendingStories}
             />
-          )}
-        </div>
-
-        {/* Sidebar Column */}
-        <div className="lg:col-span-4 border-l border-gray-800/50 pl-0 lg:pl-12 hidden lg:block">
-          <Sidebar setCategoryFilter={setCategoryFilter} />
+          </div>
         </div>
       </div>
     </div>
-  );
+  )
 }
